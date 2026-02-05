@@ -4,7 +4,6 @@ if( isset( $_POST[ 'Upload' ] ) ) {
 	// Check Anti-CSRF token
 	checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' );
 
-
 	// File information
 	$uploaded_name = $_FILES[ 'uploaded' ][ 'name' ];
 	$uploaded_ext  = substr( $uploaded_name, strrpos( $uploaded_name, '.' ) + 1);
@@ -47,16 +46,19 @@ if( isset( $_POST[ 'Upload' ] ) ) {
 		}
 
 		// Delete any temp files
-		if( file_exists( $temp_file ) )
-			unlink( $temp_file );
-	}
+		if( file_exists( $temp_file ) ) {
+			$temp_file_name = basename($temp_file);
+			$temp_file_path = dirname($temp_file);
+			$temp_file_path .= DIRECTORY_SEPARATOR . $temp_file_name;
+			unlink($temp_file_path);
+		}
 	else {
 		// Invalid file
 		$html .= '<pre>Your image was not uploaded. We can only accept JPEG or PNG images.</pre>';
 	}
-}
 
 // Generate Anti-CSRF token
 generateSessionToken();
 
 ?>
+}}
